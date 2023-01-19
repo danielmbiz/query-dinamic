@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 public class BirthChildCriteriaCustomRepository {
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     public BirthChildCriteriaCustomRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -56,7 +56,7 @@ public class BirthChildCriteriaCustomRepository {
         }
 
         if (!predicates.isEmpty()) {
-            query.where( predicates.stream().toArray( Predicate[]::new ) );
+            query.where( predicates.toArray( Predicate[]::new ) );
         }
 
         TypedQuery<BirthChild> queryResult = this.entityManager.createQuery(query);

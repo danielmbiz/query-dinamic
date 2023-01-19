@@ -2,8 +2,9 @@
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
-Foram utilizadas duas formas inicialmente para realizar as buscas dinâmicas.
- - A primeira forma é utilizando puramente o EntityManager e realizando a query com um conjunto de condições.
- - A segunda forma é utilizando critéria, definindo quais campos poderão ser filtrados.
+Foram utilizadas as seguintes formas para realizar as buscas dinâmicas.
+ - Utilizando puramente o **EntityManager** e realizando a query com um conjunto de condições.
+ - Utilizando **critéria**, definindo quais campos poderão ser filtrados.
+ - Utilizando **Example<S>** do proprio JPA
 
-Sinta-se a vontade de dar novas sugestos para a criação de busca dinâmica.
+

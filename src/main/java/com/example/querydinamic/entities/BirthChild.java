@@ -5,7 +5,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@Builder
 @Table
 @Entity
 public class BirthChild {

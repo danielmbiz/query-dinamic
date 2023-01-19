@@ -4,7 +4,12 @@ import com.example.querydinamic.criteries.BirthChildFilterParam;
 import com.example.querydinamic.entities.BirthChild;
 import com.example.querydinamic.repositories.BirthChildCriteriaCustomRepository;
 import com.example.querydinamic.repositories.BirthChildCustomRepository;
+import com.example.querydinamic.repositories.BirthChildRepository;
+import com.example.querydinamic.utils.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +17,8 @@ import java.util.List;
 @Service
 public class BirthChildService {
 
+    @Autowired
+    private BirthChildRepository birthChildRepository;
     @Autowired
     private BirthChildCustomRepository birthChildCustomRepository;
     @Autowired
@@ -23,6 +30,15 @@ public class BirthChildService {
 
     public List<BirthChild> findCriteria(BirthChildFilterParam params) {
         return birthChildCriteriaCustomRepository.getWithFilter(params);
+    }
+
+    public List<BirthChild> findAll(String name, String city) {
+        Example<BirthChild> query = QueryBuilder.makeQuery(
+                BirthChild.builder()
+                        .name(name)
+                        .city(city)
+                        .build());
+        return birthChildRepository.findAll(query);
     }
 
 }
