@@ -3,7 +3,6 @@ package com.example.querydinamic.controllers;
 import com.example.querydinamic.criteries.BirthChildFilterParam;
 import com.example.querydinamic.services.BirthChildService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

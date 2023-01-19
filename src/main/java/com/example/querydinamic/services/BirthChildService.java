@@ -8,8 +8,6 @@ import com.example.querydinamic.repositories.BirthChildRepository;
 import com.example.querydinamic.utils.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
