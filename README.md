@@ -5,6 +5,6 @@
 Foram utilizadas as seguintes formas para realizar as buscas dinâmicas.
  - Utilizando puramente o **EntityManager** e realizando a query com um conjunto de condições.
  - Utilizando **critéria**, definindo quais campos poderão ser filtrados.
- - Utilizando **Example<S>** do proprio JPA
+ - Utilizando **Example** do proprio JPA
 
 
