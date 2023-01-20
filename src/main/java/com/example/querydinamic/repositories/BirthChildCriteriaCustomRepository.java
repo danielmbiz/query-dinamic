@@ -16,9 +16,11 @@ import java.util.List;
 @Repository
 public class BirthChildCriteriaCustomRepository {
     private final EntityManager entityManager;
+
     public BirthChildCriteriaCustomRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
     public List<BirthChild> getWithFilter(BirthChildFilterParam params) {
 
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
@@ -26,37 +28,43 @@ public class BirthChildCriteriaCustomRepository {
         Root<BirthChild> birthChild = query.from(BirthChild.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if ( params.getName() != null) {
+        if (params.getName() != null) {
             predicates.add(
                     criteriaBuilder.like(
                             criteriaBuilder.upper(
                                     birthChild.get("name")),
                             "%" + params.getName().toUpperCase() + "%"));
         }
-        if ( params.getFather() != null) {
+        if (params.getBirth() != null) {
+            predicates.add(
+                    criteriaBuilder.equal(
+                            birthChild.get("birth"),
+                            params.getBirth()));
+        }
+        if (params.getFather() != null) {
             predicates.add(
                     criteriaBuilder.like(
                             criteriaBuilder.upper(
                                     birthChild.get("father")),
                             "%" + params.getFather().toUpperCase() + "%"));
         }
-        if ( params.getMon() != null) {
+        if (params.getMon() != null) {
             predicates.add(
                     criteriaBuilder.equal(
                             criteriaBuilder.upper(
                                     birthChild.get("mon")),
-                            "%" +  params.getMon().toUpperCase() + "%"));
+                            "%" + params.getMon().toUpperCase() + "%"));
         }
-        if ( params.getCity() != null) {
+        if (params.getCity() != null) {
             predicates.add(
                     criteriaBuilder.like(
                             criteriaBuilder.upper(
                                     birthChild.get("city")),
-                            "%" +  params.getCity().toUpperCase() + "%"));
+                            "%" + params.getCity().toUpperCase() + "%"));
         }
 
         if (!predicates.isEmpty()) {
-            query.where( predicates.toArray( Predicate[]::new ) );
+            query.where(predicates.toArray(Predicate[]::new));
         }
 
         TypedQuery<BirthChild> queryResult = this.entityManager.createQuery(query);

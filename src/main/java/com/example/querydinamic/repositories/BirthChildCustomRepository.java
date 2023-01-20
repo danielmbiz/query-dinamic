@@ -4,43 +4,104 @@ import com.example.querydinamic.entities.BirthChild;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public class BirthChildCustomRepository {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
     public BirthChildCustomRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public List<BirthChild> findCustom(Long id, String name, String city) {
+    public List<BirthChild> findCustom(String name, LocalDate birth, String father, String mon, String city) {
         String query = "SELECT c FROM BirthChild AS c";
         String condition = " where ";
-        if (id != null) {
-            query += condition + " c.id = :id";
+        if (name != null) {
+            query += condition + " UPPER(c.name) like CONCAT('%', :name, '%') ";
             condition = " and ";
         }
-        if (name != null) {
-            query += condition + " c.name = :name";
+        if (birth != null) {
+            query += condition + " c.birth = :birth";
+            condition = " and ";
+        }
+        if (father != null) {
+            query += condition + " UPPER(c.father) like CONCAT('%', :father, '%') ";
+            condition = " and ";
+        }
+        if (mon != null) {
+            query += condition + " UPPER(c.mon) like CONCAT('%', :mon, '%') ";
             condition = " and ";
         }
         if (city != null) {
-            query += condition + " c.city = :city";
-            condition = " and ";
+            query += condition + " UPPER(c.city) like CONCAT('%', :city, '%') ";
         }
 
         var createQuery = entityManager.createQuery(query, BirthChild.class);
-        if (id != null) {
-            createQuery.setParameter("id", id);
-        }
         if (name != null) {
-            createQuery.setParameter("name", name);
+            createQuery.setParameter("name", name.toUpperCase());
+        }
+        if (birth != null) {
+            createQuery.setParameter("birth", birth);
+        }
+        if (father != null) {
+            createQuery.setParameter("father", father.toUpperCase());
+        }
+        if (mon != null) {
+            createQuery.setParameter("mon !=", mon.toUpperCase());
         }
         if (city != null) {
-            createQuery.setParameter("city", city);
+            createQuery.setParameter("city", city.toUpperCase());
         }
 
+        return createQuery.getResultList();
+    }
+
+    public List<BirthChild> findCustomFilter(String filter) {
+        String where = "";
+        String condition = " WHERE ";
+        String[] commands = filter.split(";");
+
+        for (int i = 0; i <= commands.length - 1; i++) {
+            if (commands[i].contains(" eq ") || commands[i].contains(" == ")) {
+                where += condition + commands[i].replaceAll(" eq ", " = '").replaceAll(" == ", " = '") + "'";
+                condition = " AND ";
+            }
+            if (commands[i].contains(" lt ") || commands[i].contains(" <: ")) {
+                where += condition + commands[i].replaceAll(" lt ", " < ").replaceAll(" <: ", " < ");
+                condition = " AND ";
+            }
+            if (commands[i].contains(" gt ") || commands[i].contains(" >: ")) {
+                where += condition + commands[i].replaceAll(" gt ", " > ").replaceAll(" >: ", " > ");
+                condition = " AND ";
+            }
+            if (commands[i].contains(" le ") || commands[i].contains(" <= ")) {
+                where += condition + commands[i].replaceAll(" le ", " <= ");
+                condition = " AND ";
+            }
+            if (commands[i].contains(" ge ") || commands[i].contains(" >= ")) {
+                where += condition + commands[i].replaceAll(" ge ", " >= ");
+                condition = " AND ";
+            }
+            if (commands[i].contains(" in ")) {
+                where += condition + commands[i].replaceAll(" in ", " IN( ")+")";
+                condition = " AND ";
+            }
+            if (commands[i].contains(" not ")) {
+                where += condition + commands[i].replaceAll(" not ", " NOT IN( ")+")";
+                condition = " AND ";
+            }
+            if (commands[i].contains(" like ")) {
+                where += condition + commands[i].replaceAll(" like \\*", " LIKE CONCAT('%', '")+"', '%')";
+                where = where.replaceAll("\\*", "");
+                condition = " AND ";
+            }
+        }
+        String query = "SELECT c FROM BirthChild AS c " + where;
+        var createQuery = entityManager.createQuery(query, BirthChild.class);
         return createQuery.getResultList();
     }
 }

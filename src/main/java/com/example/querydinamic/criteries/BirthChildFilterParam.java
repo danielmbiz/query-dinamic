@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class BirthChildFilterParam {
-    private Long id;
     private String name;
     private LocalDate birth;
     private String father;
