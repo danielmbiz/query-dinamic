@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -61,46 +60,57 @@ public class BirthChildCustomRepository {
     }
 
     public List<BirthChild> findCustomFilter(String filter) {
-        String where = "";
+        StringBuilder where = new StringBuilder();
         String condition = " WHERE ";
         String[] commands = filter.split(";");
 
         for (int i = 0; i <= commands.length - 1; i++) {
             if (commands[i].contains(" eq ") || commands[i].contains(" == ")) {
-                where += condition + commands[i].replaceAll(" eq ", " = '").replaceAll(" == ", " = '") + "'";
+                where.append(condition);
+                where.append(commands[i].replaceAll(" eq ", " = '").replaceAll(" == ", " = '"));
+                where.append("'");
                 condition = " AND ";
             }
             if (commands[i].contains(" lt ") || commands[i].contains(" <: ")) {
-                where += condition + commands[i].replaceAll(" lt ", " < ").replaceAll(" <: ", " < ");
+                where.append(condition);
+                where.append(commands[i].replaceAll(" lt ", " < ").replaceAll(" <: ", " < "));
                 condition = " AND ";
             }
             if (commands[i].contains(" gt ") || commands[i].contains(" >: ")) {
-                where += condition + commands[i].replaceAll(" gt ", " > ").replaceAll(" >: ", " > ");
+                where.append(condition);
+                where.append(commands[i].replaceAll(" gt ", " > ").replaceAll(" >: ", " > "));
                 condition = " AND ";
             }
             if (commands[i].contains(" le ") || commands[i].contains(" <= ")) {
-                where += condition + commands[i].replaceAll(" le ", " <= ");
+                where.append(condition);
+                where.append(commands[i].replaceAll(" le ", " <= "));
                 condition = " AND ";
             }
             if (commands[i].contains(" ge ") || commands[i].contains(" >= ")) {
-                where += condition + commands[i].replaceAll(" ge ", " >= ");
+                where.append(condition);
+                where.append(commands[i].replaceAll(" ge ", " >= "));
                 condition = " AND ";
             }
             if (commands[i].contains(" in ")) {
-                where += condition + commands[i].replaceAll(" in ", " IN( ")+")";
+                where.append(condition);
+                where.append(commands[i].replaceAll(" in ", " IN( "));
+                where.append(")");
                 condition = " AND ";
             }
             if (commands[i].contains(" not ")) {
-                where += condition + commands[i].replaceAll(" not ", " NOT IN( ")+")";
+                where.append(condition);
+                where.append(commands[i].replaceAll(" not ", " NOT IN( "));
+                where.append(")");
                 condition = " AND ";
             }
             if (commands[i].contains(" like ")) {
-                where += condition + commands[i].replaceAll(" like \\*", " LIKE CONCAT('%', '")+"', '%')";
-                where = where.replaceAll("\\*", "");
+                where.append(condition);
+                where.append(commands[i].replaceAll(" like \\*", " LIKE CONCAT('%', '"));
+                where.append("', '%')");
                 condition = " AND ";
             }
         }
-        String query = "SELECT c FROM BirthChild AS c " + where;
+        String query = "SELECT c FROM BirthChild AS c " + where.toString().replaceAll("\\*", "");
         var createQuery = entityManager.createQuery(query, BirthChild.class);
         return createQuery.getResultList();
     }
