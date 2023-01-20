@@ -32,7 +32,7 @@ public class BirthChildService {
     }
 
     public List<BirthChild> findCriteria(BirthChildFilterParam params) {
-        return birthChildCriteriaCustomRepository.getWithFilter(params);
+        return birthChildCriteriaCustomRepository.findCriteria(params);
     }
 
     public List<BirthChild> findAll(String name, LocalDate birth, String father, String mon, String city) {

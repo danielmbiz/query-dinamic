@@ -2,6 +2,7 @@ package com.example.querydinamic.repositories;
 
 import com.example.querydinamic.entities.BirthChild;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -60,9 +61,17 @@ public class BirthChildCustomRepository {
     }
 
     public List<BirthChild> findCustomFilter(String filter) {
-        StringBuilder where = new StringBuilder();
-        String condition = " WHERE ";
         String[] commands = filter.split(";");
+        String where = whereCondition(commands);
+
+        String query = "SELECT c FROM BirthChild AS c " + where;
+        TypedQuery<BirthChild> createQuery = entityManager.createQuery(query, BirthChild.class);
+        return createQuery.getResultList();
+    }
+
+    private String whereCondition(String[] commands) {
+        String condition = " WHERE ";
+        StringBuilder where = new StringBuilder();
 
         for (int i = 0; i <= commands.length - 1; i++) {
             if (commands[i].contains(" eq ") || commands[i].contains(" == ")) {
@@ -110,8 +119,6 @@ public class BirthChildCustomRepository {
                 condition = " AND ";
             }
         }
-        String query = "SELECT c FROM BirthChild AS c " + where.toString().replaceAll("\\*", "");
-        var createQuery = entityManager.createQuery(query, BirthChild.class);
-        return createQuery.getResultList();
+        return where.toString().replaceAll("\\*","");
     }
 }

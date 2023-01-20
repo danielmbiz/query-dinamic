@@ -21,7 +21,7 @@ public class BirthChildCriteriaCustomRepository {
         this.entityManager = entityManager;
     }
 
-    public List<BirthChild> getWithFilter(BirthChildFilterParam params) {
+    public List<BirthChild> findCriteria(BirthChildFilterParam params) {
 
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<BirthChild> query = criteriaBuilder.createQuery(BirthChild.class);
