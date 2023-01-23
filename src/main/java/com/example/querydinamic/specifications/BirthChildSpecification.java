@@ -56,7 +56,7 @@ public class BirthChildSpecification implements Specification<BirthChild> {
             }
             case "like" -> {
                 return builder.like(
-                        builder.upper(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase() + "%");
+                        builder.upper(root.get(criteria.getKey())), criteria.getValue().toString().toUpperCase());
             }
             case "in" -> {
                 if (criteria.getValue() instanceof Collection) {

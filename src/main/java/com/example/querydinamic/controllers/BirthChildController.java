@@ -47,7 +47,7 @@ public class BirthChildController {
         return ResponseEntity.ok(birthChildService.findAll(name, birth, father, mon, city));
     }
 
-    @GetMapping(value = "/specification/filter")
+    @GetMapping(value = "/specification")
     public ResponseEntity<?> findAll(@RequestParam(required = false) String filter) {
         return ResponseEntity.ok(birthChildService.findAllCriteria(filter));
     }

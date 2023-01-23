@@ -3,6 +3,7 @@ package com.example.querydinamic.services;
 import com.example.querydinamic.criteries.BirthChildFilterParam;
 import com.example.querydinamic.criteries.SearchCriteria;
 import com.example.querydinamic.entities.BirthChild;
+import com.example.querydinamic.exception.ValidationException;
 import com.example.querydinamic.repositories.BirthChildCriteriaCustomRepository;
 import com.example.querydinamic.repositories.BirthChildCustomRepository;
 import com.example.querydinamic.repositories.BirthChildRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -54,10 +56,11 @@ public class BirthChildService {
     }
 
     public List<BirthChild> findAllCriteria(String filter) {
+        validEmpty(filter);
+
         List<Specification<BirthChild>> specs = new ArrayList<>();
         String[] wheres = filter.split(";");
         List<SearchCriteria> params = mountCondition(wheres);
-
         for (SearchCriteria searchCriteria : params) {
             specs.add(new BirthChildSpecification(searchCriteria));
         }
@@ -70,12 +73,23 @@ public class BirthChildService {
         return birthChildRepository.findAll(specification);
     }
 
+    private void validEmpty(String filter) {
+        if ((filter == null) || (filter.isEmpty())) {
+            throw new ValidationException("Nenhuma condição encontrada");
+        }
+    }
+
+
     private List<SearchCriteria> mountCondition(String[] wheres) {
         List<SearchCriteria> params = new ArrayList<>();
         for (int i = 0; i <= wheres.length - 1; i++) {
+
+            validateCondition(wheres[i]);
+
             if (wheres[i].contains(" eq ") || wheres[i].contains(" == ")) {
                 String[] commands = wheres[i].split("eq|==");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 String value = commands[1].trim();
                 params.add(new SearchCriteria(attribute, "eq", value));
             }
@@ -83,6 +97,7 @@ public class BirthChildService {
             if (wheres[i].contains(" lt ") || wheres[i].contains(" <: ")) {
                 String[] commands = wheres[i].split("lt|<:");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 if (isValidDate(commands[1].trim())) {
                     LocalDate value = LocalDate.parse(commands[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     params.add(new SearchCriteria(attribute, "lt", value));
@@ -96,6 +111,7 @@ public class BirthChildService {
             if (wheres[i].contains(" gt ") || wheres[i].contains(" >: ")) {
                 String[] commands = wheres[i].split("gt|>:");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 if (isValidDate(commands[1].trim())) {
                     LocalDate value = LocalDate.parse(commands[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     params.add(new SearchCriteria(attribute, "gt", value));
@@ -109,6 +125,7 @@ public class BirthChildService {
             if (wheres[i].contains(" le ") || wheres[i].contains(" <= ")) {
                 String[] commands = wheres[i].split("le|<=");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 if (isValidDate(commands[1].trim())) {
                     LocalDate value = LocalDate.parse(commands[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     params.add(new SearchCriteria(attribute, "le", value));
@@ -122,6 +139,7 @@ public class BirthChildService {
             if (wheres[i].contains(" ge ") || wheres[i].contains(" >= ")) {
                 String[] commands = wheres[i].split("ge|>=");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 if (isValidDate(commands[1].trim())) {
                     LocalDate value = LocalDate.parse(commands[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     params.add(new SearchCriteria(attribute, "ge", value));
@@ -136,6 +154,7 @@ public class BirthChildService {
                 List<String> listIn = new ArrayList<>();
                 String[] commands = wheres[i].split("in");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 String[] valueList = commands[1].split(",");
                 for (int x = 0; x <= valueList.length - 1; x++) {
                     listIn.add(valueList[x].trim());
@@ -145,13 +164,14 @@ public class BirthChildService {
             if (wheres[i].contains(" like ")) {
                 String[] commands = wheres[i].split("like");
                 String attribute = commands[0].trim();
-                String value = commands[1].trim();
+                String value = commands[1].trim().replaceAll("\\*", "%");
                 params.add(new SearchCriteria(attribute, "like", value));
             }
             if (wheres[i].contains(" not ")) {
                 List<String> listIn = new ArrayList<>();
                 String[] commands = wheres[i].split("not");
                 String attribute = commands[0].trim();
+                validAttribue(attribute);
                 String[] valueList = commands[1].split(",");
                 for (int x = 0; x <= valueList.length - 1; x++) {
                     listIn.add(valueList[x].trim());
@@ -160,6 +180,40 @@ public class BirthChildService {
             }
         }
         return params;
+    }
+
+    private void validateCondition(String conditions) {
+        if ((!conditions.contains(" eq ")) &&
+                (!conditions.contains(" == ")) &&
+                (!conditions.contains(" lt ")) &&
+                (!conditions.contains(" <: ")) &&
+                (!conditions.contains(" gt ")) &&
+                (!conditions.contains(" >: ")) &&
+                (!conditions.contains(" le ")) &&
+                (!conditions.contains(" <= ")) &&
+                (!conditions.contains(" ge ")) &&
+                (!conditions.contains(" >= ")) &&
+                (!conditions.contains(" in ")) &&
+                (!conditions.contains(" like ")) &&
+                (!conditions.contains(" not "))
+        ) {
+            throw new ValidationException("Condição não existe -> " + conditions);
+        }
+    }
+
+    private void validAttribue(String attribute) {
+        boolean exists = false;
+        Field[] fields = BirthChild.class.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getName().equals(attribute)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            throw new ValidationException("Campo não existe -> " + attribute);
+        }
+
     }
 
     private boolean isValidLong(String doubleString) {
