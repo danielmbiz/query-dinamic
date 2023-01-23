@@ -157,7 +157,7 @@ public class BirthChildService {
                 validAttribue(attribute);
                 String[] valueList = commands[1].split(",");
                 for (int x = 0; x <= valueList.length - 1; x++) {
-                    listIn.add(valueList[x].trim());
+                    listIn.add(valueList[x].trim().toUpperCase());
                 }
                 params.add(new SearchCriteria(attribute, "in", listIn));
             }
@@ -174,7 +174,7 @@ public class BirthChildService {
                 validAttribue(attribute);
                 String[] valueList = commands[1].split(",");
                 for (int x = 0; x <= valueList.length - 1; x++) {
-                    listIn.add(valueList[x].trim());
+                    listIn.add(valueList[x].trim().toUpperCase());
                 }
                 params.add(new SearchCriteria(attribute, "not", listIn));
             }

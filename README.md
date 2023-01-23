@@ -24,8 +24,18 @@ Filtros são informados no padrão *inline* a partir do paramêtro *filter*, con
  - not : operador de negação. Deve ser utilizado em conjunto com os operadores in (not-in), like (not-like) e eq (ne ou !=).
 
 #### Exemplos
+
+**EntityManager**
 - /api/custom/filter?filter=name eq Helena;father like *Dan*;birth le '2021-06-26'
 - - A consulta acima contempla as seguintes condições:
 - - - **name = 'Helena'**
 - - - **father like '%Dan%'**
 - - - **birth <= '2021-06-26'**
+
+**Criteria - JpaSpecificationExecutor**
+- /api/specification?filter=name not Helena,artur,Claudia;city in tubarão, São Paulo;id ge 2;mon like *a*
+- - A consulta acima contempla as seguintes condições:
+- - - **name NOT IN 'Helena','artur'**
+- - - **city IN 'tubarão','São Paulo'**
+- - - **id >= 2**
+- - - **mon like '%a%'**

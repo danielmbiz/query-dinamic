@@ -60,13 +60,13 @@ public class BirthChildSpecification implements Specification<BirthChild> {
             }
             case "in" -> {
                 if (criteria.getValue() instanceof Collection) {
-                    return root.get(criteria.getKey()).in((Collection) criteria.getValue());
+                    return builder.upper(root.get(criteria.getKey())).in((Collection) criteria.getValue());
                 }
                 return null;
             }
             case "not" -> {
                 if (criteria.getValue() instanceof Collection) {
-                    return builder.not(root.get(criteria.getKey()).in((Collection) criteria.getValue()));
+                    return builder.not(builder.upper(root.get(criteria.getKey())).in((Collection) criteria.getValue()));
                 }
                 return null;
             }
