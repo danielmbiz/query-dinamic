@@ -26,14 +26,14 @@ Filtros são informados no padrão *inline* a partir do paramêtro *filter*, con
 #### Exemplos
 
 **EntityManager**
-- /api/custom/filter?filter=name eq Helena;father like *Dan*;birth le '2021-06-26'
+- /api/custom/filter?filter=name eq Helena;father like *Dan *;birth le '2021-06-26'
 - - A consulta acima contempla as seguintes condições:
 - - - **name = 'Helena'**
 - - - **father like '%Dan%'**
 - - - **birth <= '2021-06-26'**
-
+    
 **Criteria - JpaSpecificationExecutor**
-- /api/specification?filter=name not Helena,artur,Claudia;city in tubarão, São Paulo;id ge 2;mon like *a*
+- /api/specification?filter=name not Helena,artur,Claudia;city in tubarão, São Paulo;id ge 2;mon like *a * 
 - - A consulta acima contempla as seguintes condições:
 - - - **name NOT IN 'Helena','artur'**
 - - - **city IN 'tubarão','São Paulo'**
