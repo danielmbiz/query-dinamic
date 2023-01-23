@@ -10,6 +10,7 @@
 ### Filtros de campos
  
  - Realizado com **EntityManager**
+ - - Realizado com **Criteria - JpaSpecificationExecutor**
 
 Filtros são informados no padrão *inline* a partir do paramêtro *filter*, conforme exemplos abaixo:
  
