@@ -66,9 +66,8 @@ public class BirthChildCriteriaCustomRepository {
         if (!predicates.isEmpty()) {
             query.where(predicates.toArray(Predicate[]::new));
         }
-
         TypedQuery<BirthChild> queryResult = this.entityManager.createQuery(query);
-
         return queryResult.getResultList();
     }
+
 }

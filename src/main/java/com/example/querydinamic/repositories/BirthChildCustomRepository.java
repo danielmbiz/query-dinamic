@@ -61,8 +61,11 @@ public class BirthChildCustomRepository {
     }
 
     public List<BirthChild> findCustomFilter(String filter) {
-        String[] commands = filter.split(";");
-        String where = whereCondition(commands);
+        String where = "";
+        if (filter != null) {
+            String[] commands = filter.split(";");
+            where = whereCondition(commands);
+        }
 
         String query = "SELECT c FROM BirthChild AS c " + where;
         TypedQuery<BirthChild> createQuery = entityManager.createQuery(query, BirthChild.class);
@@ -119,6 +122,6 @@ public class BirthChildCustomRepository {
                 condition = " AND ";
             }
         }
-        return where.toString().replaceAll("\\*","");
+        return where.toString().replaceAll("\\*", "");
     }
 }
