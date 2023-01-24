@@ -2,10 +2,12 @@ package com.example.querydinamic.services;
 
 import com.example.querydinamic.criteries.SearchCriteria;
 import com.example.querydinamic.entities.BirthChild;
-import com.example.querydinamic.exception.ValidationException;
 import com.example.querydinamic.repositories.BirthChildRepository;
-import com.example.querydinamic.specifications.BirthChildSpecification;
+import com.example.querydinamic.repositories.specifications.BirthChildSpecification;
+import com.example.querydinamic.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ public class BirthChildService {
     @Autowired
     private BirthChildRepository birthChildRepository;
 
-    public List<BirthChild> findAllCriteria(String filter) {
+    public Page<BirthChild> findAllCriteria(String filter, Pageable pageable) {
         validEmpty(filter);
 
         List<Specification<BirthChild>> specs = new ArrayList<>();
@@ -37,7 +39,7 @@ public class BirthChildService {
             specification = Specification.where(specification).and(specs.get(i));
         }
 
-        return birthChildRepository.findAll(specification);
+        return birthChildRepository.findAll(specification, pageable);
     }
 
     private void validEmpty(String filter) {

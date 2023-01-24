@@ -1,4 +1,4 @@
-package com.example.querydinamic.specifications;
+package com.example.querydinamic.repositories.specifications;
 
 import com.example.querydinamic.criteries.SearchCriteria;
 import com.example.querydinamic.entities.BirthChild;
