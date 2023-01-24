@@ -8,6 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface BirthChildRepository extends JpaRepository<BirthChild, Long>, JpaSpecificationExecutor<BirthChild> {
-    @Override
-    <S extends BirthChild> List<S> findAll(Example<S> example);
+
 }

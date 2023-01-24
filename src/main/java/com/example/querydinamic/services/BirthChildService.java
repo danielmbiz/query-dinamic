@@ -5,9 +5,7 @@ import com.example.querydinamic.entities.BirthChild;
 import com.example.querydinamic.exception.ValidationException;
 import com.example.querydinamic.repositories.BirthChildRepository;
 import com.example.querydinamic.specifications.BirthChildSpecification;
-import com.example.querydinamic.utils.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +21,6 @@ public class BirthChildService {
 
     @Autowired
     private BirthChildRepository birthChildRepository;
-
-    public List<BirthChild> findAll(String name, LocalDate birth, String father, String mon, String city) {
-        Example<BirthChild> query = QueryBuilder.makeQuery(
-                BirthChild.builder()
-                        .name(name)
-                        .birth(birth)
-                        .father(father)
-                        .mon(mon)
-                        .city(city)
-                        .build());
-        return birthChildRepository.findAll(query);
-    }
 
     public List<BirthChild> findAllCriteria(String filter) {
         validEmpty(filter);

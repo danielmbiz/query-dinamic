@@ -16,16 +16,6 @@ public class BirthChildController {
     @Autowired
     private BirthChildService birthChildService;
 
-    @GetMapping(value = "/example")
-    public ResponseEntity<?> findAll(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) LocalDate birth,
-            @RequestParam(required = false) String father,
-            @RequestParam(required = false) String mon,
-            @RequestParam(required = false) String city) {
-        return ResponseEntity.ok(birthChildService.findAll(name, birth, father, mon, city));
-    }
-
     @GetMapping(value = "/criteria")
     public ResponseEntity<?> findAll(@RequestParam(required = false) String filter) {
         return ResponseEntity.ok(birthChildService.findAllCriteria(filter));
