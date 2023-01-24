@@ -20,27 +20,13 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
     List<String> listClear = new ArrayList<>();
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
-        List<String> listError = new ArrayList<>();
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        listError.add((e.getMessage()));
-        var err = StandardError.builder()
-                .status("Resource not found")
-                .code(status.value())
-                .message(listError)
-                .result(listClear)
-                .build();
-        return ResponseEntity.status(status).body(err);
-    }
-
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<StandardError> validationException(ValidationException e, HttpServletRequest request) {
         List<String> listError = new ArrayList<>();
         listError.add((e.getMessage()));
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         var err = StandardError.builder()
-                .status("Bad Request")
+                .status("NOT FOUND")
                 .code(status.value())
                 .message(listError)
                 .result(listClear)
